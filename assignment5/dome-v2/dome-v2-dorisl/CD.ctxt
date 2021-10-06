@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=CD
+comment1.params=theTitle\ theArtist\ tracks\ time
+comment1.target=CD(java.lang.String,\ java.lang.String,\ int,\ int)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ CD\r\n
+comment2.params=
+comment2.target=java.lang.String\ getArtist()
+comment3.params=
+comment3.target=void\ print()
+numComments=4
