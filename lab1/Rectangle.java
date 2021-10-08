@@ -1,3 +1,5 @@
+//18064518D Hung Tsz Him
+
 import java.util.Scanner;
 
 public class Rectangle extends Shape
@@ -43,5 +45,12 @@ public class Rectangle extends Shape
         System.out.println("Area of Rectangle = " + super.area);
         System.out.println("Perimeter of Rectangle = " + super.perimeter);
         System.out.println();
+        draw();
+    }
+
+    public void draw()
+    {
+        Canvas canvas = Canvas.getCanvas();
+        canvas.draw(this,"blue",new java.awt.Rectangle(200,200,(int)length,(int)width));
     }
 }

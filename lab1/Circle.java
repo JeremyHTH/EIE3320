@@ -1,3 +1,5 @@
+//18064518D Hung Tsz Him
+
 import java.util.Scanner;
 
 public class Circle extends Shape
@@ -37,5 +39,12 @@ public class Circle extends Shape
         System.out.println("Area of circle = " + super.area);
         System.out.println("Perimeter of circle = " + super.perimeter);
         System.out.println();
+        draw();
+    }
+
+    public void draw()
+    {
+        Canvas canvas = Canvas.getCanvas();
+        canvas.draw(this, "blue", new java.awt.geom.Ellipse2D.Double(0, 0, (int)radius, (int)radius));
     }
 }

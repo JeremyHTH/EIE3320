@@ -1,3 +1,5 @@
+//18064518D Hung Tsz Him
+
 import java.util.Scanner;
 
 public class Square extends Shape
@@ -37,5 +39,12 @@ public class Square extends Shape
         System.out.println("Area of Square = " + super.area);
         System.out.println("Perimeter of Square = " + super.perimeter);
         System.out.println();
+        draw();
+    }
+
+    public void draw()
+    {
+        Canvas canvas = Canvas.getCanvas();
+        canvas.draw(this,"blue",new java.awt.Rectangle(100,100,(int)length,(int)length));
     }
 }
