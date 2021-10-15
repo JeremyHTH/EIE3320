@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=SystemAnalyst
+comment1.params=name\ lang\ num\ age
+comment1.target=SystemAnalyst(java.lang.String,\ java.lang.String,\ int,\ int)
+comment2.params=
+comment2.target=void\ print()
+comment3.params=y
+comment3.target=int\ getOTAllowance(int)
+numComments=4

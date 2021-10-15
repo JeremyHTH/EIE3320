@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=ProgrammerTrainee
+comment1.params=name\ lang\ hour\ age
+comment1.target=ProgrammerTrainee(java.lang.String,\ java.lang.String,\ int,\ int)
+comment2.params=
+comment2.target=void\ print()
+comment3.params=y
+comment3.target=int\ getOTAllowance(int)
+numComments=4
