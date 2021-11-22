@@ -1,5 +1,3 @@
-
-
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -131,16 +129,16 @@ public class GUI
     // make all buttonListener
     public void CreateListener()
     {
-        table.addMouseListener(new MouseAdapter() {
+        table.addMouseListener(new MouseAdapter() 
+        {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
-				String ISBNValue = (table.getModel().getValueAt(row, 0).toString());
-				String titleValue = (table.getModel().getValueAt(row, 1).toString());
-				isbn.setText(ISBNValue);
-				tit.setText(titleValue);
+				InputISBN = (table.getModel().getValueAt(row, 0).toString());
+				InputTitle = (table.getModel().getValueAt(row, 1).toString());
+				isbn.setText(InputISBN);
+				tit.setText(InputTitle);
 			}
-			
 		});
 
         add.addActionListener(new ActionListener()
@@ -158,7 +156,6 @@ public class GUI
                 f2.setVisible(true);
             }
         });
-
     }
 
     // take input from two text box
@@ -167,9 +164,6 @@ public class GUI
         InputISBN = isbn.getText();
         InputTitle = tit.getText();
     }
-
-
-
 
     public void updateTime()
 	{
