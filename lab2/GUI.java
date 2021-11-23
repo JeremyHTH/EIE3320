@@ -7,15 +7,11 @@ import java.awt.event.*;
 
 public class GUI 
 {
-    // instance variables - replace the example below with your own
-    private JLabel bl1 = new JLabel("Student Name and ID: Lo Yuen Wing (18055797D)");
-    private JLabel bl2 = new JLabel("Student Name and ID: Hung Tsz Him (18064518D)");
+    // private JLabel bl1 = new JLabel("Student Name and ID: Lo Yuen Wing (18055797D)");
+    // private JLabel bl2 = new JLabel("Student Name and ID: Hung Tsz Him (18064518D)");
     private JLabel bl3 = new JLabel("");
     private JLabel bl4 = new JLabel("ISBN:");
     private JLabel bl5 = new JLabel("Title:");
-    private JLabel LabelForMoreISBN = new JLabel("testin Isbn");
-    private JLabel LabelForMoreTitle = new JLabel("testing title");
-    private JLabel LabelForMoreAvaliable = new JLabel("testing abaliable");
     
     
     private JTextField isbn = new JTextField(8);
@@ -43,15 +39,20 @@ public class GUI
     String column[] = { "ISBN", "Title", "Avaliable" };
     DefaultTableModel TableModel = new DefaultTableModel(column, 0);
     private JTable table = new JTable(TableModel);
-    private JScrollPane srol = new JScrollPane(table);    
-    private JTextArea ar;
+    private JScrollPane srol = new JScrollPane(table);   
+    private JTextArea mainTextArea = new JTextArea();
+    private JTextArea subTextArea = new JTextArea();
+    private JTextArea subTextArea2 = new JTextArea();
+
 
     private String InputISBN, InputTitle = "";
     private MyLinkedList<Book> data =  new MyLinkedList<>();
-    private MyQueue<String> queue = new MyQueue<>();
-    private int editIndex;
+    private int editIndex,moreIndex;
     private boolean ISBNascending = true;
     private boolean Titleascending = true;
+    private String mainString = "Student Name and ID: Lo Yuen Wing (18055797D)\n" + "Student Name and ID: Hung Tsz Him (18064518D)\n";
+    private String currenttime ="";
+    private String moreISBN,moreTitle,moreAvaliable;
 
 
 
@@ -59,12 +60,9 @@ public class GUI
     // the layout set up
     public void Layout()
     {
-        JPanel p1 = new JPanel(new BorderLayout());
-        p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
-        p1.setBackground(Color.white);
-        p1.add(bl1);
-        p1.add(bl2);
-        p1.add(bl3);
+
+
+        mainTextArea.setText(mainString);
         
         JPanel p2 = new JPanel(new BorderLayout());
         p2.add(srol);
@@ -103,18 +101,19 @@ public class GUI
         f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f1.setVisible(true);
         f1.setLayout(new GridLayout(3,1));
-        ar = new JTextArea("");
-        f1.getContentPane().add(p1);
+        f1.getContentPane().add(mainTextArea);
         f1.getContentPane().add(p2);
         f1.getContentPane().add(p6);
 
         setbuttonmode(0);
 
-        JPanel p7 = new JPanel(new GridLayout(3,1));
-        p7.add(LabelForMoreISBN);
-        p7.add(LabelForMoreTitle);
-        p7.add(LabelForMoreAvaliable);
-        p7.setBackground(Color.white);
+        // JPanel p7 = new JPanel(new GridLayout(3,1));
+        // p7.add(LabelForMoreISBN);
+        // p7.add(LabelForMoreTitle);
+        // p7.add(LabelForMoreAvaliable);
+        // p7.setBackground(Color.white);
+
+        
 
         JPanel p8 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p8.add(Borrow);
@@ -126,10 +125,10 @@ public class GUI
         f2.setLocationRelativeTo(null);
         f2.setVisible(false);
         f2.setLayout(new BorderLayout());
-        f2.add(p7,BorderLayout.NORTH);
+        f2.add(subTextArea,BorderLayout.NORTH);
         f2.add(p8,BorderLayout.CENTER);
+        f2.add(subTextArea2,BorderLayout.SOUTH);
 
-        
     }
 
     // make all buttonListener
@@ -279,7 +278,31 @@ public class GUI
         {
             public void actionPerformed(ActionEvent e)
             {
-                f2.setVisible(true);
+                getInput();
+                if(!isbnExistInData(InputISBN))
+                {
+                    JOptionPane.showMessageDialog(f1,"Book ISBN is not in the database","Error",JOptionPane.ERROR_MESSAGE);
+                }
+                else 
+                {
+                    moreIndex = indexOfIsbn(InputISBN);
+                    moreISBN = data.get(moreIndex).getISBN() + "\n";
+                    moreTitle = data.get(moreIndex).getTitle() + "\n";
+                    moreAvaliable = "Abailable: " + data.get(moreIndex).isAvailable();
+                    subTextArea.setText(moreISBN + moreTitle + moreAvaliable);
+                    f2.setTitle(data.get(moreIndex).getTitle());
+                    if(data.get(moreIndex).isAvailable())
+                    {
+                        setbuttonmode(2);
+                        subTextArea2.setText("");
+                    }
+                    else
+                    {
+                        setbuttonmode(3);
+                        subTextArea2.setText("This book is borrowed.");
+                    }
+                    f2.setVisible(true);
+                }
             }
         });
 
@@ -355,6 +378,66 @@ public class GUI
             }
         });
 
+        Borrow.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                setbuttonmode(3);
+                data.get(moreIndex).setAvailable(false);
+                moreAvaliable = "Abailable: " + data.get(moreIndex).isAvailable();
+                subTextArea.setText(moreISBN + moreTitle + moreAvaliable);
+                displayAllData();
+            }
+        });
+
+        Return.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                String nextBorrower = null;
+                if(data.get(moreIndex).getReservedQueue().getSize()>0)
+                    nextBorrower = data.get(moreIndex).getReservedQueue().dequeue();
+                if (nextBorrower == null)
+                {
+                    data.get(moreIndex).setAvailable(true);
+                    moreAvaliable = "Abailable: " + data.get(moreIndex).isAvailable();
+                    subTextArea.setText(moreISBN + moreTitle + moreAvaliable);
+                    setbuttonmode(2);
+                }
+                else 
+                {
+                    String output = "The book is returned \nThe book is now borrowed by " + nextBorrower;
+                    subTextArea2.setText(output);
+                }
+            }
+        });
+
+        Reserve.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                String name = JOptionPane.showInputDialog("What's your name?");
+                if(name != null)
+                {
+                    data.get(moreIndex).getReservedQueue().enqueue(name);
+                    subTextArea2.setText("The book is reserved by " + name + ".");
+                }
+            }
+        });
+
+        WaitingQ.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                String temp = "The waiting queue:";
+                MyQueue <String> queue = data.get(moreIndex).getReservedQueue();
+                for (int i =0; i < queue.getSize();i++)
+                {
+                    temp = temp + "\n" + queue.getList().get(i) ;
+                }
+                subTextArea2.setText(temp);
+            }
+        });
     }
 
     
@@ -413,10 +496,10 @@ public class GUI
             displayByISBN.setEnabled(true); 
             displayByTitle.setEnabled(true);
             exit.setEnabled(true); 
-            Borrow.setEnabled(true); 
-            Return.setEnabled(true); 
-            Reserve.setEnabled(true); 
-            WaitingQ.setEnabled(true);
+            Borrow.setEnabled(false); 
+            Return.setEnabled(false); 
+            Reserve.setEnabled(false); 
+            WaitingQ.setEnabled(false);
         }
         else if(mode == 1)
         {
@@ -438,21 +521,39 @@ public class GUI
         }
         else if(mode == 2)
         {
-            add.setEnabled(false); 
-            edit.setEnabled(false); 
+            add.setEnabled(true); 
+            edit.setEnabled(true); 
             save.setEnabled(false); 
-            del.setEnabled(false);
-            search.setEnabled(false); 
-            more.setEnabled(false); 
-            load.setEnabled(false); 
-            display.setEnabled(false); 
-            displayByISBN.setEnabled(false); 
-            displayByTitle.setEnabled(false);
-            exit.setEnabled(false); 
-            Borrow.setEnabled(false); 
+            del.setEnabled(true);
+            search.setEnabled(true); 
+            more.setEnabled(true); 
+            load.setEnabled(true); 
+            display.setEnabled(true); 
+            displayByISBN.setEnabled(true); 
+            displayByTitle.setEnabled(true);
+            exit.setEnabled(true); 
+            Borrow.setEnabled(true); 
             Return.setEnabled(false); 
             Reserve.setEnabled(false); 
             WaitingQ.setEnabled(false);
+        }
+        if (mode == 3)
+        {
+            add.setEnabled(true); 
+            edit.setEnabled(true); 
+            save.setEnabled(false); 
+            del.setEnabled(true);
+            search.setEnabled(true); 
+            more.setEnabled(true); 
+            load.setEnabled(true); 
+            display.setEnabled(true); 
+            displayByISBN.setEnabled(true); 
+            displayByTitle.setEnabled(true);
+            exit.setEnabled(true); 
+            Borrow.setEnabled(false); 
+            Return.setEnabled(true); 
+            Reserve.setEnabled(true); 
+            WaitingQ.setEnabled(true);
         }
     }
 
@@ -513,9 +614,8 @@ public class GUI
 					{
 						SimpleDateFormat formatter=new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",java.util.Locale.ENGLISH);
 						Date date = new Date();
-					
-					bl3.setText(formatter.format(date));
-					
+					    bl3.setText(formatter.format(date));
+                        mainTextArea.setText(mainString + formatter.format(date));
 						sleep(1000);
 					} 
 				}
