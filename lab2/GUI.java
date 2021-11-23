@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.text.SimpleDateFormat;
 import java.awt.event.*;
+import java.io.*;
 
 public class GUI 
 {
@@ -12,10 +13,15 @@ public class GUI
     private JLabel bl3 = new JLabel("");
     private JLabel bl4 = new JLabel("ISBN:");
     private JLabel bl5 = new JLabel("Title:");
+    private JLabel bl6 = new JLabel("Username:");
+    private JLabel bl7 = new JLabel("Password:");
     
     
     private JTextField isbn = new JTextField(8);
     private JTextField tit = new JTextField(8);
+    private JTextField username = new JTextField(8);
+    private JTextField password = new JTextField(8);
+
     
     private JButton add = new JButton("Add");
     private JButton edit = new JButton("Edit");
@@ -32,9 +38,12 @@ public class GUI
     private JButton Return = new JButton("Return");
     private JButton Reserve = new JButton("Reserve");
     private JButton WaitingQ = new JButton("Waiting Queue");
+    private JButton Login = new JButton("Login");
+    private JButton Create = new JButton("Create");
 
     JFrame f1 = new JFrame("Library Admin System");
     JFrame f2 = new JFrame("");
+    JFrame f3 = new JFrame("Login Page");
     
     String column[] = { "ISBN", "Title", "Avaliable" };
     DefaultTableModel TableModel = new DefaultTableModel(column, 0);
@@ -95,7 +104,7 @@ public class GUI
         f1.setSize(800,600);
         f1.setLocationRelativeTo(null);
         f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f1.setVisible(true);
+        f1.setVisible(false);
         f1.setLayout(new GridLayout(3,1));
         f1.getContentPane().add(mainTextArea);
         f1.getContentPane().add(p2);
@@ -116,6 +125,28 @@ public class GUI
         f2.add(subTextArea,BorderLayout.NORTH);
         f2.add(p8,BorderLayout.CENTER);
         f2.add(subTextArea2,BorderLayout.SOUTH);
+
+        JPanel p9 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        p9.add(bl6);
+        p9.add(username);
+
+        JPanel p10 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        p10.add(bl7);
+        p10.add(password);
+
+        JPanel p11 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        p11.add(Login);
+        p11.add(Create);
+
+
+        f3.setSize(300,200);
+        f3.setLocationRelativeTo(null);
+        f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f3.setVisible(true);
+        f3.setLayout(new GridLayout(3,1));
+        f3.add(p9);
+        f3.add(p10);
+        f3.add(p11);
 
     }
 
@@ -157,6 +188,7 @@ public class GUI
                         newbook.setAvailable(true);
                         data.add(newbook);
                         addDataToTable(newbook.getTitle(),newbook.getISBN(),newbook.isAvailable());
+                        rewriteDataToTxt();
                     }
                 }
             }
@@ -202,6 +234,7 @@ public class GUI
                     data.get(editIndex).setISBN(InputISBN);
                     data.get(editIndex).setTitle(InputTitle);
                     displayAllData();
+                    rewriteDataToTxt();
                     setbuttonmode(0);
                 }
                 
@@ -221,6 +254,7 @@ public class GUI
                     editIndex = indexOfIsbn(InputISBN);
                     data.remove(editIndex);
                     displayAllData();
+                    rewriteDataToTxt();
                 }
             }
         });
@@ -331,6 +365,7 @@ public class GUI
                     else JOptionPane.showMessageDialog(f1,"ISBN 0132222205 is already added!","Error",JOptionPane.ERROR_MESSAGE);
 
                 displayAllData();
+                rewriteDataToTxt();
             }
         });
 
@@ -364,6 +399,7 @@ public class GUI
             {
                 f1.dispose();
                 f2.dispose();
+                f3.dispose();
             }
         });
 
@@ -377,6 +413,7 @@ public class GUI
                 subTextArea.setText(moreISBN + moreTitle + moreAvaliable);
                 subTextArea2.setText("The book is borrowed");
                 displayAllData();
+                rewriteDataToTxt();
             }
         });
 
@@ -400,6 +437,7 @@ public class GUI
                     String output = "The book is returned \nThe book is now borrowed by " + nextBorrower;
                     subTextArea2.setText(output);
                 }
+                rewriteDataToTxt();
             }
         });
 
@@ -412,6 +450,7 @@ public class GUI
                 {
                     data.get(moreIndex).getReservedQueue().enqueue(name);
                     subTextArea2.setText("The book is reserved by " + name + ".");
+                    rewriteDataToTxt();
                 }
             }
         });
@@ -427,6 +466,94 @@ public class GUI
                     temp = temp + "\n" + queue.getList().get(i) ;
                 }
                 subTextArea2.setText(temp);
+            }
+        });
+    
+        Login.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                boolean success = false;
+                String inputuser = username.getText(); 
+                String inputpassword = password.getText();
+
+                try 
+                {
+                    File inputFile = new File("user.txt");
+                    Scanner InputLineFromFile = new Scanner(inputFile);
+                    while (InputLineFromFile.hasNextLine()) 
+                    {
+                        String line = InputLineFromFile.nextLine();
+                        String[] splitLine = line.split("~");
+                        if(inputuser.equals(splitLine[0]) && inputpassword.equals(splitLine[1]))
+                            success = true;
+                    }
+                    InputLineFromFile.close();
+                } 
+                catch (FileNotFoundException f) 
+                {
+                    System.out.println("An error occurred.");
+                    f.printStackTrace();
+                }
+
+                if(success)
+                {
+                    f3.setVisible(false);
+                    readDataFromTxt();
+                    displayAllData();
+                    f1.setVisible(true);
+                }
+                else 
+                {
+                    JOptionPane.showMessageDialog(f1,"Wrong Username or Password","Error",JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        Create.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+                {
+                    boolean found = false;
+                    String inputuser = username.getText(); 
+                    String inputpassword = password.getText();
+
+                    try 
+                    {
+                        File inputFile = new File("user.txt");
+                        Scanner InputLineFromFile = new Scanner(inputFile);
+                        while (InputLineFromFile.hasNextLine()) 
+                        {
+                            String line = InputLineFromFile.nextLine();
+                            String[] splitLine = line.split("~");
+                            if(inputuser.equals(splitLine[0]))
+                                found = true;
+                        }
+                        InputLineFromFile.close();
+                    } 
+                    catch (FileNotFoundException f) 
+                    {
+                        System.out.println("An error occurred.");
+                        f.printStackTrace();
+                    }
+
+                    if (!found)
+                    {
+                        try 
+                        {
+                            FileWriter myWriter = new FileWriter("user.txt",true);
+                            String outputToFile = inputuser + "~" + inputpassword + "\n";
+                            myWriter.write(outputToFile);
+                            myWriter.close();
+                        } 
+                        catch (IOException g) 
+                        {
+                            System.out.println("An error occurred.");
+                            g.printStackTrace();
+                        }
+                    }
+                    else 
+                        JOptionPane.showMessageDialog(f1,"Username exist","Error",JOptionPane.ERROR_MESSAGE);
             }
         });
     }
@@ -617,6 +744,62 @@ public class GUI
 		clock.start();
 	}
     
+    public void readDataFromTxt()
+    {
+        try 
+        {
+            File inputFile = new File("Book.txt");
+            Scanner InputLineFromFile = new Scanner(inputFile);
+            while (InputLineFromFile.hasNextLine()) 
+            {
+                String line = InputLineFromFile.nextLine();
+                String[] splitLine = line.split("~");
+                Book temp = new Book();
+                temp.setISBN(splitLine[0]);
+                temp.setTitle(splitLine[1]);
+                if (splitLine[2].equals("true"))
+                    temp.setAvailable(true);
+                else 
+                    temp.setAvailable(false);
+                for (int i =3; i<splitLine.length; i++)
+                {
+                    temp.getReservedQueue().enqueue(splitLine[i]);
+                }
+                data.add(temp);
+            }
+            InputLineFromFile.close();
+        } 
+        catch (FileNotFoundException e) 
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public void rewriteDataToTxt()
+    {
+        try 
+        {
+            FileWriter myWriter = new FileWriter("book.txt",false);
+            for(int i=0; i<data.size(); i++)
+            {
+                String outputToFile = data.get(i).getISBN() + "~" + data.get(i).getTitle() + "~" + data.get(i).isAvailable();
+                for (int j=0; j<data.get(i).getReservedQueue().getSize(); j++)
+                {
+                    outputToFile += "~" + data.get(i).getReservedQueue().getList().get(j);
+                }
+                outputToFile += "\n";
+                myWriter.write(outputToFile);
+            }
+            myWriter.close();
+        } 
+        catch (IOException e) 
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public GUI()
     {
         CreateListener();
