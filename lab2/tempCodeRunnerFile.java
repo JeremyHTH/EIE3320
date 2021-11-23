@@ -1,1 +1,0 @@
-private MyLinkedList<Book> data =  new MyLinkedList<>();

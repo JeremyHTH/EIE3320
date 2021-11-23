@@ -60,8 +60,6 @@ public class GUI
     // the layout set up
     public void Layout()
     {
-
-
         mainTextArea.setText(mainString);
         
         JPanel p2 = new JPanel(new BorderLayout());
@@ -94,8 +92,6 @@ public class GUI
         p6.add(p4);
         p6.add(p5);
 
-
-
         f1.setSize(800,600);
         f1.setLocationRelativeTo(null);
         f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,14 +102,6 @@ public class GUI
         f1.getContentPane().add(p6);
 
         setbuttonmode(0);
-
-        // JPanel p7 = new JPanel(new GridLayout(3,1));
-        // p7.add(LabelForMoreISBN);
-        // p7.add(LabelForMoreTitle);
-        // p7.add(LabelForMoreAvaliable);
-        // p7.setBackground(Color.white);
-
-        
 
         JPanel p8 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p8.add(Borrow);
@@ -200,11 +188,12 @@ public class GUI
             {
                 boolean exit = true;
                 getInput();
-                if (InputISBN !=data.get(editIndex).getISBN()) 
+                if (!InputISBN.equals(data.get(editIndex).getISBN()) )
                 {
                     if(isbnExistInData(InputISBN)) 
                     {
                         JOptionPane.showMessageDialog(f1,"Book ISBN exist in current database","Error",JOptionPane.ERROR_MESSAGE);
+                        System.out.println(data.get(editIndex).getISBN());
                         exit = false;
                     }
                 }    
@@ -386,6 +375,7 @@ public class GUI
                 data.get(moreIndex).setAvailable(false);
                 moreAvaliable = "Abailable: " + data.get(moreIndex).isAvailable();
                 subTextArea.setText(moreISBN + moreTitle + moreAvaliable);
+                subTextArea2.setText("The book is borrowed");
                 displayAllData();
             }
         });
@@ -402,6 +392,7 @@ public class GUI
                     data.get(moreIndex).setAvailable(true);
                     moreAvaliable = "Abailable: " + data.get(moreIndex).isAvailable();
                     subTextArea.setText(moreISBN + moreTitle + moreAvaliable);
+                    subTextArea2.setText("The book is returned.");
                     setbuttonmode(2);
                 }
                 else 
@@ -439,9 +430,7 @@ public class GUI
             }
         });
     }
-
     
-
     // take input from two text box
     public void getInput()
     {
