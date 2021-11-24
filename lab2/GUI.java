@@ -300,6 +300,8 @@ public class GUI
                     }
                 }
                 clearBox();
+                ISBNascending = false;
+                Titleascending = false;
             }
         });
 
@@ -724,6 +726,7 @@ public class GUI
                 sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
                 ISBNascending = true;
             }
+            Titleascending = false;
         }
         else if(mode == 1)
         {
@@ -737,6 +740,7 @@ public class GUI
                 sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
                 Titleascending = true;
             }
+            ISBNascending = false;
         }
         sorter.setSortKeys(sortKeys);
 		sorter.sort();
