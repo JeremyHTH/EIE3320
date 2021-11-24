@@ -57,6 +57,7 @@ public class GUI
 
     private String InputISBN, InputTitle = "";
     private MyLinkedList<Book> data =  new MyLinkedList<>();
+    private TableRowSorter<TableModel> sorter;
     private int editIndex,moreIndex;
     private boolean ISBNascending = false;
     private boolean Titleascending = false;
@@ -160,8 +161,8 @@ public class GUI
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
-				InputISBN = (table.getModel().getValueAt(row, 0).toString());
-				InputTitle = (table.getModel().getValueAt(row, 1).toString());
+				InputISBN = (table.getValueAt(row, 0).toString());
+				InputTitle = (table.getValueAt(row, 1).toString());
 				isbn.setText(InputISBN);
 				tit.setText(InputTitle);
 			}
@@ -506,6 +507,7 @@ public class GUI
                     f3.setVisible(false);
                     readDataFromTxt();
                     displayAllData();
+                    sort(0);
                     f1.setVisible(true);
                 }
                 else 
@@ -706,7 +708,7 @@ public class GUI
 
     public void sort(int mode)
     {
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(table.getModel());
+        sorter = new TableRowSorter<TableModel>(table.getModel());
         table.setRowSorter(sorter);
         ArrayList <RowSorter.SortKey> sortKeys = new ArrayList<>();
 
