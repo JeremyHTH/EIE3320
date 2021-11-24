@@ -226,7 +226,7 @@ public class GUI
                 {
                     if(isbnExistInData(InputISBN)) 
                     {
-                        JOptionPane.showMessageDialog(f1,"Book ISBN exist in current database","Message",JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(f1,"Error: statuBook ISBN exist in current database","Message",JOptionPane.INFORMATION_MESSAGE);
                         System.out.println(data.get(editIndex).getISBN());
                         exit = false;
                     }
