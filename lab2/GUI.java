@@ -40,6 +40,7 @@ public class GUI
     private JButton WaitingQ = new JButton("Waiting Queue");
     private JButton Login = new JButton("Login");
     private JButton Create = new JButton("Create");
+    private JButton LoginExit = new JButton("Exit");
 
     JFrame f1 = new JFrame("Library Admin System");
     JFrame f2 = new JFrame("");
@@ -137,6 +138,7 @@ public class GUI
         JPanel p11 = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p11.add(Login);
         p11.add(Create);
+        p11.add(LoginExit);
 
 
         f3.setSize(300,200);
@@ -556,6 +558,17 @@ public class GUI
                         JOptionPane.showMessageDialog(f1,"Username exist","Error",JOptionPane.ERROR_MESSAGE);
             }
         });
+
+        LoginExit.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                f1.dispose();
+                f2.dispose();
+                f3.dispose();
+            }
+        });
+
     }
     
     // take input from two text box
