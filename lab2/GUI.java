@@ -58,8 +58,8 @@ public class GUI
     private String InputISBN, InputTitle = "";
     private MyLinkedList<Book> data =  new MyLinkedList<>();
     private int editIndex,moreIndex;
-    private boolean ISBNascending = true;
-    private boolean Titleascending = true;
+    private boolean ISBNascending = false;
+    private boolean Titleascending = false;
     private String mainString = "Student Name and ID: Lo Yuen Wing (18055797D)\n" + "Student Name and ID: Hung Tsz Him (18064518D)\n";
     private String currenttime ="";
     private String moreISBN,moreTitle,moreAvaliable;
@@ -191,6 +191,7 @@ public class GUI
                         data.add(newbook);
                         addDataToTable(newbook.getTitle(),newbook.getISBN(),newbook.isAvailable());
                         rewriteDataToTxt();
+                        clearBox();
                     }
                 }
             }
@@ -237,6 +238,7 @@ public class GUI
                     data.get(editIndex).setTitle(InputTitle);
                     displayAllData();
                     rewriteDataToTxt();
+                    clearBox();
                     setbuttonmode(0);
                 }
                 
@@ -257,6 +259,7 @@ public class GUI
                     data.remove(editIndex);
                     displayAllData();
                     rewriteDataToTxt();
+                    clearBox();
                 }
             }
         });
@@ -576,6 +579,12 @@ public class GUI
     {
         InputISBN = isbn.getText();
         InputTitle = tit.getText();
+    }
+
+    public void clearBox()
+    {
+        isbn.setText("");
+        tit.setText("");
     }
 
     public void addDataToTable(String T, String I, Boolean A)
