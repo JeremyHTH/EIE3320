@@ -299,7 +299,7 @@ public class GUI
                             addDataToTable(data.get(i).getTitle(),data.get(i).getISBN(),data.get(i).isAvailable());
                     }
                 }
-
+                clearBox();
             }
         });
 
