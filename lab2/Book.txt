@@ -1,4 +1,3 @@
-D~D~false
 0131450913~HTML How to Program~true
-0132222205~Java How to Program~true
 0131857576~C++ How to Program~true
+0132222205~Java How to Program~true
